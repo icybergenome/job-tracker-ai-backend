@@ -5,4 +5,5 @@ ollama==0.4.7
 protobuf==6.30.0
 pydantic==2.10.6
 python-dotenv==1.0.1
+slack_sdk==3.34.0
 waitress==3.0.2
