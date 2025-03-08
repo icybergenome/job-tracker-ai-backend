@@ -21,7 +21,7 @@ def send_slack_notification(job_title, job_url, job_description, ai_evaluation):
             # if job is highly relevant in text we should use alert emoji and red color
             # if job is medium relevant in text we should use warning emoji and yellow color
             # if job is low relevant in text we should use info emoji and blue color
-            text=f"**{job_title}**\n{job_url}\n\n{job_description}\n\n{ai_evaluation['summary']}\n\nRelevancy: {ai_evaluation['relevancy']}\n\nKey Points: {ai_evaluation['keyPoints']}"
+            text=f"** {job_title} **\nhttps://www.upwork.com{job_url}\n\n{job_description}\n\nAI Summary: {ai_evaluation['summary']}\n\nRelevancy: {ai_evaluation['relevancy']}\n\nKey Points: {ai_evaluation['keyPoints']}"
         )
         print(f"Message sent to Slack: {response['ts']}")
     except SlackApiError as e:
