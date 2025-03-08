@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os
 from dotenv import load_dotenv
 from pprint import pprint
