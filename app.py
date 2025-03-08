@@ -15,6 +15,8 @@ from flask import Flask, request, jsonify
 
 from pydantic import BaseModel
 
+from notifications import send_slack_notification
+
 
 load_dotenv()
 
@@ -188,6 +190,8 @@ def evaluate_jobs():
             
             # Save job, evaluation, and proposal to Google Sheets
             save_to_google_sheets(job, evaluation_output, proposal_output, sheet_name)
+            # send notification
+            send_slack_notification(job["jobTitle"], job["jobUrl"], job["jobDescription"], evaluation_output)
         
         return jsonify({"message": "Jobs processed successfully!", "relevant_jobs": relevant_jobs}), 200
     except Exception as e:
