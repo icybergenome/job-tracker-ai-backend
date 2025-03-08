@@ -2,13 +2,13 @@ import os
 from pprint import pprint
 import ollama
 import json
-import gspread
-import google.auth
+# import gspread
+# import google.auth
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+# from googleapiclient.errors import HttpError
 from flask import Flask, request, jsonify
 
 from pydantic import BaseModel
@@ -199,4 +199,5 @@ def evaluate_jobs():
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5001)

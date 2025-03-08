@@ -1,3 +1,25 @@
+## instructions
+* create env
+```bash
+python -m venv myenv
+```
+* Activate Env
+```bash
+myenv\Scripts\activate
+```
+* To deactivate env
+```bash
+deactivate
+```
+* Install Dependencies
+```bash 
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib ollama flask gspread waitress
+```
+* Run code: 
+```bash
+python app.py
+```
+
 ## About Credentials_oauth
 * The very first time we should save a client json downloaded from Google cloud console.
 * We should comment following lines:
