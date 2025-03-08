@@ -21,15 +21,6 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
-# Your details
-my_details = {
-    "Name": "Bilal Saeed",
-    "Technical Niche": "Full stack web and mobile development",
-    "Languages": ["Typescript", "JavaScript", "Python", "Rails"],
-    "Frameworks and libraries": ["NextJS", "ReactJS", "ExpressJS", "Flask", "Ruby on Rails"],
-    "Cloud": ["Firebase", "SupaBase", "AWS(EC2, lightsail, s3, step functions, cdk, cognito, Lambda, Cloudfront, Amplify)", "Hetzner", "Google Cloud Platform"]
-}
-
 MODEL_NAME = os.getenv("MODEL_NAME")
 # Google Sheets setup
 SHEET_ID = os.getenv("SHEET_ID")
@@ -44,10 +35,10 @@ class Proposal(BaseModel):
     proposal: str
 
 # Function to evaluate job relevancy and extract key points
-def evaluate_job(job, my_details):
+def evaluate_job(job, profile_details):
     prompt = f"""
     Evaluate the following job based on my skills and abilities:
-    My Details: {json.dumps(my_details, indent=2)}
+    My Details: {json.dumps(profile_details, indent=2)}
     Job Details: {json.dumps(job, indent=2)}
 
     Output must be in json format and must have following info:
@@ -68,10 +59,10 @@ def evaluate_job(job, my_details):
     return evaluation
 
 # Function to generate an ideal proposal
-def generate_proposal(job, my_details):
+def generate_proposal(job, profile_details):
     prompt = f"""
     Generate an ideal proposal for the following job based on my skills and abilities:
-    My Details: {json.dumps(my_details, indent=2)}
+    My Details: {json.dumps(profile_details, indent=2)}
     Job Details: {json.dumps(job, indent=2)}
 
     Proposal should be in json format and must be covering following details:
@@ -91,7 +82,7 @@ def generate_proposal(job, my_details):
     return proposal
 
 # Function to save data to Google Sheets
-def save_to_google_sheets(job, evaluation, proposal):
+def save_to_google_sheets(job, evaluation, proposal, sheet_name):
     try:
         creds = None
         # The file token.json stores the user's access and refresh tokens, and is
@@ -134,7 +125,7 @@ def save_to_google_sheets(job, evaluation, proposal):
             ", ".join(evaluation.get("keyPoints", [])) if evaluation and "keyPoints" in evaluation else "",
             proposal.get("proposal", "") if "proposal" in proposal else "",
             # current date and time
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
         ]
         print("Saving data to Google Sheets...")
         pprint(row)
@@ -142,7 +133,7 @@ def save_to_google_sheets(job, evaluation, proposal):
         # append the row to the sheet
         result = service.spreadsheets().values().append(
             spreadsheetId=SHEET_ID,
-            range="DevJobs!A:R",
+            range=sheet_name+"!A:R",
             valueInputOption="USER_ENTERED",
             insertDataOption="INSERT_ROWS",
             body=body
@@ -163,12 +154,15 @@ def save_to_google_sheets(job, evaluation, proposal):
 @app.route('/evaluate-jobs', methods=['POST'])
 def evaluate_jobs():
     try:
-        jobs_data = request.json  # Get job data from the request body
+        payload = request.json
+        profile_details = payload.get('profileDetails', {})
+        jobs_data = payload.get('jobs', [])
+        sheet_name = payload.get('sheetName', "DevJobs")
         pprint(jobs_data)
         relevant_jobs = []
         
         for job in jobs_data:
-            evaluation = evaluate_job(job, my_details)
+            evaluation = evaluate_job(job, profile_details)
             print(f"Evaluation for Job: {job['jobTitle']}")
             pprint(evaluation)
 
@@ -180,7 +174,7 @@ def evaluate_jobs():
             proposal_output = ""
             
             if "High" in evaluation_output['relevancy']:
-                proposal = generate_proposal(job, my_details)
+                proposal = generate_proposal(job, profile_details)
                 print(f"\nProposal for Job: {job['jobTitle']}")
                 pprint(proposal)
 
@@ -193,7 +187,7 @@ def evaluate_jobs():
                 })
             
             # Save job, evaluation, and proposal to Google Sheets
-            save_to_google_sheets(job, evaluation_output, proposal_output)
+            save_to_google_sheets(job, evaluation_output, proposal_output, sheet_name)
         
         return jsonify({"message": "Jobs processed successfully!", "relevant_jobs": relevant_jobs}), 200
     except Exception as e:
