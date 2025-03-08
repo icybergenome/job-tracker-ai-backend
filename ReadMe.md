@@ -4,8 +4,13 @@
 python -m venv myenv
 ```
 * Activate Env
-```bash
+```cmd
 myenv\Scripts\activate
+```
+
+Mac/Linux
+```bash
+source venv/bin/activate
 ```
 * To deactivate env
 ```bash
@@ -13,7 +18,7 @@ deactivate
 ```
 * Install Dependencies
 ```bash 
-pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib ollama flask gspread waitress
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib ollama flask gspread waitress python-dotenv
 ```
 * Run code: 
 ```bash

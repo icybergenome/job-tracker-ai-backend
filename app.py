@@ -1,4 +1,6 @@
+import datetime
 import os
+from dotenv import load_dotenv
 from pprint import pprint
 import ollama
 import json
@@ -14,6 +16,8 @@ from flask import Flask, request, jsonify
 from pydantic import BaseModel
 
 
+load_dotenv()
+
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -26,8 +30,9 @@ my_details = {
     "Cloud": ["Firebase", "SupaBase", "AWS(EC2, lightsail, s3, step functions, cdk, cognito, Lambda, Cloudfront, Amplify)", "Hetzner", "Google Cloud Platform"]
 }
 
+MODEL_NAME = os.getenv("MODEL_NAME")
 # Google Sheets setup
-SHEET_ID = "1EMaXXR85T8hLR6OFwbeKlVLXEVuaQO3knb72yjdcn9g"  # Name of your Google Sheet
+SHEET_ID = os.getenv("SHEET_ID")
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 class JobEvaluation(BaseModel):
@@ -53,15 +58,11 @@ def evaluate_job(job, my_details):
     {{
         "relevancy": "High",
         "summary": "This job is really interesting and relevant. Client is looking for a Full stack developer .....",
-        "keyPoints": {
-            "technologies": ["NextJS"],
-            "domain": ["Web", "Mobile"],
-            ....
-        }
+        "keyPoints": {"Keypoint1", "Keypoint2", "Keypoint3"}
     }}
     """
     
-    response = ollama.generate(model='deepseek-r1', prompt=prompt, format=JobEvaluation.model_json_schema())
+    response = ollama.generate(model=MODEL_NAME, prompt=prompt, format=JobEvaluation.model_json_schema())
     evaluation = response['response']
     
     return evaluation
@@ -84,7 +85,7 @@ def generate_proposal(job, my_details):
     }}
     """
     
-    response = ollama.generate(model='deepseek-r1', prompt=prompt, format=Proposal.model_json_schema())
+    response = ollama.generate(model=MODEL_NAME, prompt=prompt, format=Proposal.model_json_schema())
     proposal = response['response']
     
     return proposal
@@ -128,10 +129,12 @@ def save_to_google_sheets(job, evaluation, proposal):
             job.get("proposals", ""),
             # json.dumps(evaluation),
             # json.dumps(proposal)
-            evaluation.get("relevancy", ""),
-            evaluation.get("summary", ""),
-            ", ".join(evaluation.get("keyPoints", [])),
-            proposal.get("proposal", "")
+            evaluation.get("relevancy", "") if evaluation and "relevancy" in evaluation else "",
+            evaluation.get("summary", "") if evaluation and "summary" in evaluation else "",
+            ", ".join(evaluation.get("keyPoints", [])) if evaluation and "keyPoints" in evaluation else "",
+            proposal.get("proposal", "") if "proposal" in proposal else "",
+            # current date and time
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ]
         print("Saving data to Google Sheets...")
         pprint(row)
@@ -139,7 +142,7 @@ def save_to_google_sheets(job, evaluation, proposal):
         # append the row to the sheet
         result = service.spreadsheets().values().append(
             spreadsheetId=SHEET_ID,
-            range="DevJobs!A:Q",
+            range="DevJobs!A:R",
             valueInputOption="USER_ENTERED",
             insertDataOption="INSERT_ROWS",
             body=body
