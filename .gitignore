@@ -1,3 +1,5 @@
 venv
 
 credentials_oauth.json
+
+.env
