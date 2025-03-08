@@ -1,6 +1,9 @@
 import os
+from dotenv import load_dotenv
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+
+load_dotenv()
 
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_OAUTH_TOKEN")
 
@@ -11,6 +14,7 @@ CHANNEL_ID = os.getenv("SLACK_CHANNEL_ID")
 
 def send_slack_notification(job_title, job_url, job_description, ai_evaluation):
     try:
+        print("Slack Channel ID:", CHANNEL_ID)
         response = client.chat_postMessage(
             channel=CHANNEL_ID,
             # ai_evaulation consists of 3 elements: summary, keyPoints, relevancy
