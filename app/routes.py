@@ -12,7 +12,13 @@ def evaluate_jobs():
         
         # Enqueue each job for background processing
         for job in jobs_data:
-            queue.enqueue(process_job, job, profile_details, sheet_name, timeout=900)
+            queue.enqueue_call(
+                func=process_job,
+                args=(job, profile_details, sheet_name),
+                timeout=900,  # Timeout in seconds
+                result_ttl=86400,  # Keep the result for 24 hours
+                ttl=3600  # Discard the job if it stays in the queue for more than 1 hour
+            )
         
         return jsonify({"message": "Jobs are being processed in the background!"}), 202
     except Exception as e:
