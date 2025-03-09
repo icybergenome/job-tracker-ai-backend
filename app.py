@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from pprint import pprint
-import ollama
+from ollama import Client
 import json
 # import gspread
 # import google.auth
@@ -25,6 +25,7 @@ app = Flask(__name__)
 
 MODEL_NAME = os.getenv("MODEL_NAME")
 OLLAMA_URL = os.getenv("OLLAMA_URL")
+ollama_client = Client(host=OLLAMA_URL)
 # Google Sheets setup
 SHEET_ID = os.getenv("SHEET_ID")
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -56,7 +57,7 @@ def evaluate_job(job, profile_details):
     }"
     """
     
-    response = ollama.generate(model=MODEL_NAME, base_url=OLLAMA_URL, prompt=prompt, format=JobEvaluation.model_json_schema())
+    response = ollama_client.generate(model=MODEL_NAME, prompt=prompt, format=JobEvaluation.model_json_schema())
     evaluation = response['response']
     
     return evaluation
@@ -74,7 +75,7 @@ def generate_proposal(job, profile_details):
     3. Propose technologies relevant to the job and my skills
     """
     
-    response = ollama.generate(model=MODEL_NAME, base_url=OLLAMA_URL, prompt=prompt, format=Proposal.model_json_schema())
+    response = ollama_client.generate(model=MODEL_NAME, prompt=prompt, format=Proposal.model_json_schema())
     proposal = response['response']
     
     return proposal
