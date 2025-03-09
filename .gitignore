@@ -6,3 +6,5 @@ __pycache__
 credentials_oauth.json
 
 .env
+
+*.rdb
