@@ -53,7 +53,7 @@ def evaluate_job(job, profile_details):
     {{
         "relevancy": "High",
         "summary": "This job is really interesting and relevant. Client is looking for a Full stack developer .....",
-        "keyPoints": {"Keypoint1", "Keypoint2", "Keypoint3"}
+        "keyPoints": Array of Objects with keys such as: point and reason
     }}
     """
     
@@ -125,7 +125,7 @@ def save_to_google_sheets(job, evaluation, proposal, sheet_name):
             # json.dumps(proposal)
             evaluation.get("relevancy", "") if evaluation and "relevancy" in evaluation else "",
             evaluation.get("summary", "") if evaluation and "summary" in evaluation else "",
-            ", ".join(evaluation.get("keyPoints", [])) if evaluation and "keyPoints" in evaluation else "",
+            ", ".join([f"{keyPoint.get('point', '')} - {keyPoint.get('reason', '')}" for keyPoint in evaluation.get("keyPoints", [])]) if evaluation and "keyPoints" in evaluation else "",
             proposal.get("proposal", "") if "proposal" in proposal else "",
             # current date and time
             datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
