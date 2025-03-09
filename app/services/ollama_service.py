@@ -1,6 +1,15 @@
 from ollama import Client
 import json
 from app import app
+from pydantic import BaseModel
+
+class JobEvaluation(BaseModel):
+    relevancy: str
+    summary: str
+    keyPoints: list
+ 
+class Proposal(BaseModel):
+    proposal: str
 
 ollama_client = Client(host=app.config['OLLAMA_URL'])
 
@@ -22,7 +31,7 @@ def evaluate_job(job, profile_details):
     }}
     """
     
-    response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt)
+    response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=JobEvaluation.model_json_schema())
     return response['response']
 
 def generate_proposal(job, profile_details):
@@ -37,5 +46,5 @@ def generate_proposal(job, profile_details):
     3. Propose technologies relevant to the job and my skills
     """
     
-    response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt)
+    response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
     return response['response']
