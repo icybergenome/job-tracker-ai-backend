@@ -50,14 +50,16 @@ def evaluate_job(job, profile_details):
     2. Brief Summary about the job
     3. Important key points about the job such as based on my skills and abilities should I apply for this job or not
     Example:
-    "{
+    {{
         "relevancy": "High",
         "summary": "This job is really interesting and relevant. Client is looking for a Full stack developer .....",
         "keyPoints": {"Keypoint1", "Keypoint2", "Keypoint3"}
-    }"
+    }}
     """
     
+    print("Prompt:", prompt)
     response = ollama_client.generate(model=MODEL_NAME, prompt=prompt, format=JobEvaluation.model_json_schema())
+    pprint(response)
     evaluation = response['response']
     
     return evaluation
@@ -75,7 +77,9 @@ def generate_proposal(job, profile_details):
     3. Propose technologies relevant to the job and my skills
     """
     
+    print("Prompt:", prompt)
     response = ollama_client.generate(model=MODEL_NAME, prompt=prompt, format=Proposal.model_json_schema())
+    pprint(response)
     proposal = response['response']
     
     return proposal
@@ -157,7 +161,7 @@ def evaluate_jobs():
         profile_details = payload.get('profileDetails', {})
         jobs_data = payload.get('jobs', [])
         sheet_name = payload.get('sheetName', "DevJobs")
-        pprint(jobs_data)
+        # pprint(jobs_data)
         relevant_jobs = []
         
         for job in jobs_data:
