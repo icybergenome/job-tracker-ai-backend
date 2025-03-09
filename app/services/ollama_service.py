@@ -30,8 +30,9 @@ def evaluate_job(job, profile_details):
         "keyPoints": Array of Objects with keys such as: point and reason
     }}
     """
-    
+    print("Making request to Ollama... for job evaluation", job['jobTitle'])
     response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=JobEvaluation.model_json_schema())
+    print("Response from Ollama:", response['response'])
     return response['response']
 
 def generate_proposal(job, profile_details):
@@ -45,6 +46,7 @@ def generate_proposal(job, profile_details):
     2. Ask relevant questions
     3. Propose technologies relevant to the job and my skills
     """
-    
+    print("Making request to Ollama... for job proposal", job['jobTitle'])
     response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
+    print("Response from Ollama:", response['response'])
     return response['response']
