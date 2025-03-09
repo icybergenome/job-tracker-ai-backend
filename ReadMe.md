@@ -32,6 +32,10 @@ redis-server
 ```bash
 rq worker
 ```
+* Run RQ Dashboard (http://localhost:9181)
+```bash
+rq-dashboard
+```
 * update requirements.txt
 ```bash
 pipreqs /path/to/project
