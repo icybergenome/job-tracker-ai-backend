@@ -24,6 +24,8 @@ load_dotenv()
 app = Flask(__name__)
 
 MODEL_NAME = os.getenv("MODEL_NAME")
+OLLAMA_URL = os.getenv("OLLAMA_URL")
+ollama.Client(base_url=OLLAMA_URL)
 # Google Sheets setup
 SHEET_ID = os.getenv("SHEET_ID")
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
