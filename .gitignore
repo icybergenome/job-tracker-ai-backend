@@ -1,4 +1,7 @@
 venv
+myenv
+__pycache__
+
 
 credentials_oauth.json
 
