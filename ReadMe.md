@@ -1,4 +1,8 @@
 ## instructions
+* Run Redis
+```bash
+sudo service redis-server start
+```
 * create env
 ```bash
 python -m venv myenv
@@ -18,11 +22,15 @@ deactivate
 ```
 * Install Dependencies
 ```bash 
-pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib ollama flask gspread waitress python-dotenv
+pip install -r /path/to/requirements.txt
 ```
-* Run Redis
+* Run Redis Server
 ```bash
-sudo service redis-server start
+redis-server
+```
+* Run RQ worker
+```bash
+rq worker
 ```
 * update requirements.txt
 ```bash
@@ -30,7 +38,7 @@ pipreqs /path/to/project
 ```
 * Run code: 
 ```bash
-python app.py
+python run.py
 ```
 
 ## About Credentials_oauth
