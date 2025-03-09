@@ -32,7 +32,9 @@ def evaluate_job(job, profile_details):
     """
     print("Making request to Ollama... for job evaluation", job['jobTitle'])
     response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=JobEvaluation.model_json_schema())
-    print("Response from Ollama:", response['response'])
+    tokens_per_s = response['eval_count']/response['eval_duration'] * 10^9
+    print(f"Response from Ollama generated {response['eval_count']} tokens in {response['eval_duration']} seconds. {tokens_per_s} tokens per second")
+    
     return response['response']
 
 def generate_proposal(job, profile_details):
@@ -48,5 +50,6 @@ def generate_proposal(job, profile_details):
     """
     print("Making request to Ollama... for job proposal", job['jobTitle'])
     response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
-    print("Response from Ollama:", response['response'])
+    tokens_per_s = response['eval_count']/response['eval_duration'] * 10^9
+    print(f"Response from Ollama generated {response['eval_count']} tokens in {response['eval_duration']} seconds. {tokens_per_s} tokens per second")
     return response['response']
