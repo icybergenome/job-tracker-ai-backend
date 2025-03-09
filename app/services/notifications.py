@@ -1,16 +1,15 @@
 import os
-from dotenv import load_dotenv
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from app import app
 
-load_dotenv()
 
-SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_OAUTH_TOKEN")
+SLACK_BOT_TOKEN = app.config['SLACK_BOT_OAUTH_TOKEN']
 
 # Initialize the Slack client
 client = WebClient(token=SLACK_BOT_TOKEN)
 
-CHANNEL_ID = os.getenv("SLACK_CHANNEL_ID")
+CHANNEL_ID = app.config['SLACK_CHANNEL_ID']
 
 def send_slack_notification(job_title, job_url, job_description, ai_evaluation):
     try:
@@ -60,7 +59,7 @@ def send_slack_notification(job_title, job_url, job_description, ai_evaluation):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"*Key Points:*\n- " + "\n- ".join(ai_evaluation['keyPoints'])
+                    "text": f"*Key Points:*\n- " + "\n- ".join([f"{keyPoint.get('point', '')} - {keyPoint.get('reason', '')}" for keyPoint in ai_evaluation['keyPoints']])
                 }
             }
         ]

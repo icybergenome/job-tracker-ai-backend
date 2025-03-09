@@ -3,7 +3,8 @@ google_api_python_client==2.163.0
 google_auth_oauthlib==1.2.1
 ollama==0.4.7
 protobuf==6.30.0
-pydantic==2.10.6
 python-dotenv==1.0.1
+redis==5.2.1
+rq==2.1.0
 slack_sdk==3.34.0
 waitress==3.0.2

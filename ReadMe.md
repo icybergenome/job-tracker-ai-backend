@@ -20,6 +20,10 @@ deactivate
 ```bash 
 pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib ollama flask gspread waitress python-dotenv
 ```
+* Run Redis
+```bash
+sudo service redis-server start
+```
 * update requirements.txt
 ```bash
 pipreqs /path/to/project
