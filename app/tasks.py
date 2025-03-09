@@ -17,5 +17,5 @@ def process_job(job, profile_details, sheet_name):
       # Save job, evaluation, and proposal to Google Sheets
       save_to_google_sheets(job, evaluation_output, proposal_output, sheet_name)
       send_slack_notification(job["jobTitle"], job["jobUrl"], job["jobDescription"], evaluation_output)
-    except JobTimeoutException:
-       print("Job processing timed out.")
+    except Exception as e:
+      print(f"Error processing job: {e}")
