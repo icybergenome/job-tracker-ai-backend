@@ -6,14 +6,15 @@ import json
 
 def process_job(job, profile_details, sheet_name):
     basic_evaluation = basic_evaluate_job(job, profile_details)
-    print(f"Basic Evaluation for Job: {job['jobTitle']}, Done ✅")
+    print(f"Basic Evaluation for Job: {job['jobTitle']}, Done ✅", basic_evaluation)
     evaluation_output = json.loads(basic_evaluation)
 
-    if "High" in basic_evaluation['relevancy']:
+    if "High" in evaluation_output['relevancy']:
         detail_evaluation = detail_evaluate_job(job, profile_details)
         print(f"Detail Evaluation for Job: {job['jobTitle']}, Done ✅")
         detail_evaluation_output = json.loads(detail_evaluation)
         evaluation_output = {**evaluation_output, **detail_evaluation_output}	
+        print(f"Final Evaluation for Job: {job['jobTitle']}, Done ✅", evaluation_output)   
     else:
         evaluation_output['summary'] = ""
         evaluation_output['keyPoints'] = []
