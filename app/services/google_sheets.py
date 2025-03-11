@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 from datetime import datetime
 from app import app
 
-def save_to_google_sheets(job, evaluation, proposal, sheet_name):
+def get_auth():
     try:
         creds = None
         if os.path.exists('credentials_oauth.json'):
@@ -20,6 +20,13 @@ def save_to_google_sheets(job, evaluation, proposal, sheet_name):
                 creds = flow.run_local_server(port=0)
             with open('credentials_oauth.json', 'w') as token:
                 token.write(creds.to_json())
+        return creds
+    except Exception as e:
+        print(f"Auth Error: {e}")
+
+def save_to_google_sheets(job, evaluation, proposal, sheet_name):
+    try:
+        creds = get_auth()
 
         service = build('sheets', 'v4', credentials=creds)
 
@@ -52,5 +59,40 @@ def save_to_google_sheets(job, evaluation, proposal, sheet_name):
             body=body
         ).execute()
         print("Data saved to Google Sheets successfully!", result)
+        return result['updates']['updatedRange']
     except Exception as e:
         print(f"Error saving to Google Sheets: {e}")
+
+def read_from_row_address(row_address):
+    try:
+        creds = get_auth()
+        service = build('sheets', 'v4', credentials=creds)
+        result = service.spreadsheets().values().get(
+            spreadsheetId=app.config['SHEET_ID'],
+            range=row_address
+        ).execute()
+        return result.get('values', [])
+    except Exception as e:
+      print(f"Error retrieving row data: {e}")
+      
+def save_proposal_in_proposal_sheet(jobAddress, proposal):
+    try:
+        creds = get_auth()
+        service = build('sheets', 'v4', credentials=creds)
+        sheet_name = "Proposals"
+        values = [
+            [jobAddress, proposal.get("proposal", "")]
+        ]
+        body = {"values": values}
+        result = service.spreadsheets().values().append(
+            spreadsheetId=app.config['SHEET_ID'],
+            range=sheet_name+"!A:B",
+            valueInputOption="USER_ENTERED",
+            insertDataOption="INSERT_ROWS",
+            body=body
+        ).execute()
+        print("Proposal saved to Proposals Sheet successfully!", result)
+        return result['updates']['updatedRange']
+    except Exception as e:
+        print(f"Error saving proposal to Proposals Sheet: {e}")
+

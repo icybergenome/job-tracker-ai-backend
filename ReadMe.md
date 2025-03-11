@@ -32,6 +32,10 @@ redis-server
 ```bash
 rq worker
 ```
+Additional step on MacOS:
+```bash
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+```
 * Run RQ Dashboard (http://localhost:9181)
 ```bash
 rq-dashboard

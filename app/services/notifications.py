@@ -11,7 +11,7 @@ client = WebClient(token=SLACK_BOT_TOKEN)
 
 CHANNEL_ID = app.config['SLACK_CHANNEL_ID']
 
-def send_slack_notification(job_title, job_url, job_description, ai_evaluation):
+def send_slack_notification(job_title, job_url, job_description, ai_evaluation, table_range):
     try:
         print("Slack Channel ID:", CHANNEL_ID)
         # Create a Block Kit message
@@ -38,31 +38,39 @@ def send_slack_notification(job_title, job_url, job_description, ai_evaluation):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"_{job_description}_"
+                    "text": f"Relevancy: {':fire:' if ai_evaluation['relevancy'] == 'High' else ''}{ai_evaluation['relevancy']}"
                 }
             },
             {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"Data Saved range: {table_range}"
+                }
+            }
+        ]
+        if ai_evaluation['relevancy'] == "High":
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"_{job_description}_"
+                }
+            })
+            blocks.append({
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
                     "text": f"*AI Summary:*\n{ai_evaluation['summary']}"
                 }
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*Relevancy:* {ai_evaluation['relevancy']}"
-                }
-            },
-            {
+            })
+            blocks.append({
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
                     "text": f"*Key Points:*\n- " + "\n- ".join([f"{keyPoint.get('point', '')} - {keyPoint.get('reason', '')}" for keyPoint in ai_evaluation['keyPoints']])
                 }
-            }
-        ]
+            })
         response = client.chat_postMessage(
             channel=CHANNEL_ID,
             # ai_evaulation consists of 3 elements: summary, keyPoints, relevancy
