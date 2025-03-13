@@ -89,7 +89,7 @@ def generate_proposal(job, profile_details, related_past_projects):
         - Give reference of related past projects if necessary 
     """
     print("Making request to Ollama... for job proposal", job['jobTitle'])
-    response = ollama_client.generate(model=app.config['MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
+    response = ollama_client.generate(model=app.config['PROPOSAL_MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
     tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
     print(f"Response from Ollama generated {response['eval_count']} tokens using {tokens_per_s} tokens per second")
     return response['response']
