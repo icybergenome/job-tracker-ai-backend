@@ -46,9 +46,9 @@ def detail_evaluate_job(job, profile_details):
             ```
             Title: {job['jobTitle']}
             Description: {job['jobDescription']}
-            Client Rating: {job['clientRating']}
-            Client Spendings: {job['clientSpendings']}
-            Client Country: {job['clientCountry']}
+            Client Rating: {job.get('clientRating', '')}
+            Client Spendings: {job.get('clientSpendings', '')}
+            Client Country: {job.get('clientCountry', '')}
             ```
 
     Output must be in json format and must have following info:
