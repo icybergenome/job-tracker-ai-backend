@@ -71,7 +71,7 @@ def detail_evaluate_job(job, profile_details):
 
 def generate_proposal(job, profile_details, related_past_projects):
     prompt = f"""
-    I want to apply for following job post:
+    I want to apply for following job post as a Freelancer:
         ```
         Title: {job['jobTitle']}
         Description: {job['jobDescription']}
