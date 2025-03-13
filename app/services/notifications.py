@@ -71,6 +71,9 @@ def send_slack_notification(job_title, job_url, job_description, ai_evaluation, 
                     "text": f"*Key Points:*\n- " + "\n- ".join([f"{keyPoint.get('point', '')} - {keyPoint.get('reason', '')}" for keyPoint in ai_evaluation['keyPoints']])
                 }
             })
+            blocks.append({
+                "type": "divider"
+            })
         response = client.chat_postMessage(
             channel=CHANNEL_ID,
             # ai_evaulation consists of 3 elements: summary, keyPoints, relevancy
