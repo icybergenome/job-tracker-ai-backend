@@ -18,13 +18,14 @@ ollama_client = Client(host=app.config['OLLAMA_URL'])
 def basic_evaluate_job(job, profile_details):
     prompt = f"""
     Evaluate the following job based on Profiles skills and abilities:
-    My Details: {json.dumps(profile_details, indent=2)}
-    Job Details: {json.dumps(job, indent=2)}
+        - Profiles of person to apply: {json.dumps(profile_details, indent=2)}
+        - Details of potential Job: {json.dumps(job, indent=2)}
 
     Output must be in json format and must have following info:
     1. Relevancy of the job (High, Medium, Low, Irrelevant)
-    2. Brief Summary about the job
-    3. Important key points about the job such as based on my skills and abilities should I apply for this job or not
+    While evaluating the job, consider following factors:
+    - Technologies mention in skills and jobDescription should be aligned with my skills
+    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with) 
     Example:
     {{
         "relevancy": "High"
@@ -40,12 +41,22 @@ def basic_evaluate_job(job, profile_details):
 def detail_evaluate_job(job, profile_details):
     prompt = f"""
     Evaluate the following job based on Profiles skills and abilities:
-    My Details: {json.dumps(profile_details, indent=2)}
-    Job Details: {json.dumps(job, indent=2)}
+        - Profiles of person to apply: {json.dumps(profile_details, indent=2)}
+        - Details of potential Job:
+            ```
+            Title: {job['jobTitle']}
+            Description: {job['jobDescription']}
+            Client Rating: {job['clientRating']}
+            Client Spendings: {job['clientSpendings']}
+            Client Country: {job['clientCountry']}
+            ```
 
     Output must be in json format and must have following info:
     1. Brief Summary about the job
     2. Important key points about the job such as based on my skills and abilities should I apply for this job or not
+    While evaluating the job, consider following factors:
+    - Technologies mention in skills and jobDescription should be aligned with my skills
+    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with) 
     Example:
     {{
         "summary": "This job is really interesting and relevant. Client is looking for a Full stack developer .....",
@@ -67,12 +78,13 @@ def generate_proposal(job, profile_details, related_past_projects):
         ```
     
     Help me write a Job proposal based on my skills which are as follow:
-        My Details: {json.dumps(profile_details, indent=2)}
-        Related Past Projects: {json.dumps(related_past_projects, indent=2)}
+        Profiles of person to apply: {json.dumps(profile_details, indent=2)}
+        My Related Past Projects: {json.dumps(related_past_projects, indent=2)}
 
     Proposal should be covering following details:
-        - Talk about project details
-        - Ask relevant questions
+        - Proposal should be professional with perfect structure
+        - In a proposal talk about project details
+        - Ask relevant questions where needed
         - Propose technologies relevant to the job and my skills
         - Give reference of related past projects if necessary 
     """
