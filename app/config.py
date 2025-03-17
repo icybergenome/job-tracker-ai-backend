@@ -13,7 +13,7 @@ class Config:
 
     # Ollama settings
     OLLAMA_URL = os.getenv("OLLAMA_URL")
-    MODEL_NAME = os.getenv("MODEL_NAME")
+    EVALUATION_MODEL_NAME = os.getenv("EVALUATION_MODEL_NAME")
     PROPOSAL_MODEL_NAME = os.getenv("PROPOSAL_MODEL_NAME")
 
     # Google Sheets settings
