@@ -25,7 +25,7 @@ def basic_evaluate_job(job, profile_details):
     1. Relevancy of the job (High, Medium, Low, Irrelevant)
     While evaluating the job, consider following factors:
     - Provided 2 profiles one for developer and other for designer. Use the profile relevancy to decide the relevancy of the job
-    - Technologies mention in skills and jobDescription should be aligned with my skills.
+    - Match Technologies mention in profiles and technologies require in this job:
         - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
         - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
     - clientRating(clients with higher rating are more relevant)
@@ -62,7 +62,7 @@ def detail_evaluate_job(job, profile_details):
     2. Important key points about the job such as based on my skills and abilities should I apply for this job or not
     While evaluating the job, consider following factors:
     - Provided 2 profiles one for developer and other for designer. Use the profile relevancy to decide the relevancy of the job
-    - Technologies mention in skills and jobDescription should be aligned with my skills.
+    - Match Technologies mention in profiles and technologies require in this job:
         - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
         - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
     - clientRating(clients with higher rating are more relevant)
