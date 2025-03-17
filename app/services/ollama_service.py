@@ -24,8 +24,8 @@ def basic_evaluate_job(job, profile_details):
     Output must be in json format and must have following info:
     1. Relevancy of the job (High, Medium, Low, Irrelevant)
     While evaluating the job, consider following factors:
-    - Technologies mention in skills and jobDescription should be aligned with my skills
-    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with) 
+    - Technologies mention in skills and jobDescription should be aligned with my skills. If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
+    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant) 
     Example:
     {{
         "relevancy": "High"
@@ -55,8 +55,8 @@ def detail_evaluate_job(job, profile_details):
     1. Brief Summary about the job
     2. Important key points about the job such as based on my skills and abilities should I apply for this job or not
     While evaluating the job, consider following factors:
-    - Technologies mention in skills and jobDescription should be aligned with my skills
-    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with) 
+    - Technologies mention in skills and jobDescription should be aligned with my skills. If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
+    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant) 
     Example:
     {{
         "summary": "This job is really interesting and relevant. Client is looking for a Full stack developer .....",
