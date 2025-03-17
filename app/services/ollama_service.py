@@ -28,10 +28,12 @@ def basic_evaluate_job(job, profile_details):
     - Match Technologies mention in profiles and technologies require in this job:
         - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
         - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
-    - clientRating(clients with higher rating are more relevant)
-    - clientSpendings(higher spendings are more relevant)
-    - clientCountry:
-        - clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant
+    From the job details above pay special attention to following field:
+        - jobType: This field shows the budget and type of job(i.e. fixed or hourly) If budget matches the effort required in the job then job is relevant
+        - clientRating: clients with higher rating are more relevant
+        - clientSpendings: higher spendings are more relevant
+        - clientCountry:
+            - clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant
     Example:
     {{
         "relevancy": "High"
@@ -53,8 +55,9 @@ def detail_evaluate_job(job, profile_details):
             Title: {job['jobTitle']}
             Description: {job['jobDescription']}
             Client Rating: {job.get('clientRating', '')}
-            Client Spendings: {job.get('clientSpendings', '')}
+            Client Spending: {job.get('clientSpendings', '')}
             Client Country: {job.get('clientCountry', '')}
+            Job Type and Budget: {job.get('jobType', '')}
             ```
 
     Output must be in json format and must have following info:
@@ -65,9 +68,11 @@ def detail_evaluate_job(job, profile_details):
     - Match Technologies mention in profiles and technologies require in this job:
         - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
         - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
-    - clientRating(clients with higher rating are more relevant)
-    - clientSpendings(higher spendings are more relevant)
-    - clientCountry:
+    From the job details above pay special attention to following field:
+    - Job Type and Budget: This field shows the budget and type of job(i.e. fixed or hourly). If budget matches the effort required in the job then job is relevant
+    - Client Rating: clients with higher rating are more relevant
+    - Client Spending: higher spendings are more relevant
+    - Client Country:
         - clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant
     Example:
     {{
