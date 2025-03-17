@@ -27,7 +27,8 @@ def process_job(job, profile_details, sheet_name):
     
     # Save job, evaluation, and proposal to Google Sheets
     range_info = save_to_google_sheets(job, evaluation_output, proposal_output, sheet_name)
-    send_slack_notification(job["jobTitle"], job["jobUrl"], job["jobDescription"], evaluation_output, range_info)
+    if "High" in evaluation_output['relevancy']:
+        send_slack_notification(job["jobTitle"], job["jobUrl"], job["jobDescription"], evaluation_output, range_info)
 
 def generate_job_proposal(jobAddress, profile_details, related_past_projects):
     print("Getting Data for ", jobAddress)
