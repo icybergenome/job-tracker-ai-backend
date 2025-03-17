@@ -18,14 +18,20 @@ ollama_client = Client(host=app.config['OLLAMA_URL'])
 def basic_evaluate_job(job, profile_details):
     prompt = f"""
     Evaluate the following job based on Profiles skills and abilities:
-        - Profiles of person to apply: {json.dumps(profile_details, indent=2)}
+        - Profiles: {json.dumps(profile_details, indent=2)}
         - Details of potential Job: {json.dumps(job, indent=2)}
 
     Output must be in json format and must have following info:
     1. Relevancy of the job (High, Medium, Low, Irrelevant)
     While evaluating the job, consider following factors:
-    - Technologies mention in skills and jobDescription should be aligned with my skills. If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
-    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant) 
+    - Provided 2 profiles one for developer and other for designer. Use the profile relevancy to decide the relevancy of the job
+    - Technologies mention in skills and jobDescription should be aligned with my skills.
+        - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
+        - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
+    - clientRating(clients with higher rating are more relevant)
+    - clientSpendings(higher spendings are more relevant)
+    - clientCountry:
+        - clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant
     Example:
     {{
         "relevancy": "High"
@@ -41,7 +47,7 @@ def basic_evaluate_job(job, profile_details):
 def detail_evaluate_job(job, profile_details):
     prompt = f"""
     Evaluate the following job based on Profiles skills and abilities:
-        - Profiles of person to apply: {json.dumps(profile_details, indent=2)}
+        - Profiles: {json.dumps(profile_details, indent=2)}
         - Details of potential Job:
             ```
             Title: {job['jobTitle']}
@@ -55,8 +61,14 @@ def detail_evaluate_job(job, profile_details):
     1. Brief Summary about the job
     2. Important key points about the job such as based on my skills and abilities should I apply for this job or not
     While evaluating the job, consider following factors:
-    - Technologies mention in skills and jobDescription should be aligned with my skills. If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
-    - clientRating(clients with higher rating are more relevant), clientSpendings(higher spendings are more relevant) and clientCountry(clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant) 
+    - Provided 2 profiles one for developer and other for designer. Use the profile relevancy to decide the relevancy of the job
+    - Technologies mention in skills and jobDescription should be aligned with my skills.
+        - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
+        - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
+    - clientRating(clients with higher rating are more relevant)
+    - clientSpendings(higher spendings are more relevant)
+    - clientCountry:
+        - clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant
     Example:
     {{
         "summary": "This job is really interesting and relevant. Client is looking for a Full stack developer .....",
