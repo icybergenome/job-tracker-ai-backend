@@ -22,18 +22,18 @@ def basic_evaluate_job(job, profile_details):
         - Details of potential Job: {json.dumps(job, indent=2)}
 
     Output must be in json format and must have following info:
-    1. Relevancy of the job (High, Medium, Low, Irrelevant)
-    While evaluating the job, consider following factors:
-    - Provided 2 profiles one for developer and other for designer. Use the profile relevancy to decide the relevancy of the job
-    - Match Technologies mention in profiles and technologies require in this job:
-        - If some major skills are missing from profiles then job is irrelevant. Lets say a job is not relevant if it requires PHP expertise but profiles does not have PHP expertise then job is irrelevant
-        - Similarly we provide the custom development solutions so jobs like Wordpress, Shopify, Magento, Prestashop are not relevant
-    From the job details above pay special attention to following field:
-        - jobType: This field shows the budget and type of job(i.e. fixed or hourly) If budget matches the effort required in the job then job is relevant
-        - clientRating: clients with higher rating are more relevant
-        - clientSpendings: higher spendings are more relevant
-        - clientCountry:
-            - clients from richer countries are more relevant and easy to work with i.e. Clients from India, Pakistan and similar countries are not relevant
+        1. Relevancy of the job (High, Medium, Low, Irrelevant)
+            While evaluating the job, consider following factors:
+            - Provided 2 profiles one for developer and other for designer. Use the profile relevancy to decide the relevancy of the job
+            - Match Technologies mention in profiles and technologies require in this job:
+                - Match the skills and abilities in profiles from the job. If job requires some technical skills such as PHP expertise but profiles does not have PHP expertise then job is irrelevant
+                - We provide the custom development solutions so jobs like Wordpress, Shopify, Magento are not relevant
+            From the job details above pay special attention to following field:
+                - jobType: This field shows the budget and type of job(i.e. fixed or hourly) If budget matches the effort required in the job then job is relevant
+                - clientRating: clients with higher rating are more relevant
+                - clientSpendings: higher spendings are more relevant
+                - clientCountry:
+                    - Clients from India, Pakistan, Bangladesh and similar countries are not relevant
     Example:
     {{
         "relevancy": "High"
