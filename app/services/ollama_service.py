@@ -1,4 +1,6 @@
-from ollama import Client
+# from ollama import Client
+# import requests
+import lmstudio as lms
 import json
 from app import app
 from pydantic import BaseModel
@@ -13,7 +15,10 @@ class DetailJobEvaluation(BaseModel):
 class Proposal(BaseModel):
     proposal: str
 
-ollama_client = Client(host=app.config['OLLAMA_URL'])
+# ollama_client = Client(host=app.config['OLLAMA_URL'])
+lms.configure_default_client(app.config['AI_URL'])
+lmstudio_model = lms.llm(app.config['EVALUATION_MODEL_NAME'])
+# ai_host_url = app.config['AI_URL']
 
 def basic_evaluate_job(job, profile_details):
     prompt = f"""
@@ -40,11 +45,12 @@ def basic_evaluate_job(job, profile_details):
     }}
     """
     print("Making request to Ollama... for job evaluation", job['jobTitle'])
-    response = ollama_client.generate(model=app.config['EVALUATION_MODEL_NAME'], prompt=prompt, format=BasicJobEvaluation.model_json_schema())
-    tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
-    print(f"Response from Ollama generated {response['eval_count']} tokens using {tokens_per_s} tokens per second")
+    response = lmstudio_model.respond(prompt, response_format=BasicJobEvaluation.model_json_schema())
+    # response = ollama_client.generate(model=app.config['EVALUATION_MODEL_NAME'], prompt=prompt, format=BasicJobEvaluation.model_json_schema())
+    # tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
+    print(f"basic_evaluate_job: Response from LMStudio generated", response.stats)
     
-    return response['response']
+    return response.parsed
 
 def detail_evaluate_job(job, profile_details):
     prompt = f"""
@@ -81,10 +87,18 @@ def detail_evaluate_job(job, profile_details):
     }}
     """
     print("Making request to Ollama... for job evaluation", job['jobTitle'])
-    response = ollama_client.generate(model=app.config['EVALUATION_MODEL_NAME'], prompt=prompt, format=DetailJobEvaluation.model_json_schema())
-    tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
-    print(f"Response from Ollama generated {response['eval_count']} tokens using {tokens_per_s} tokens per second")
-    return response['response']
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "prompt": prompt
+    }
+    response = lmstudio_model.respond(prompt, response_format=DetailJobEvaluation.model_json_schema())
+    # response = ollama_client.generate(model=app.config['EVALUATION_MODEL_NAME'], prompt=prompt, format=DetailJobEvaluation.model_json_schema())
+    # tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
+    # print(f"Response from Ollama generated {response['eval_count']} tokens using {tokens_per_s} tokens per second")
+    print(f"detail_evaluate_job: Response from LMStudio generated", response.stats)
+    return response.parsed
 
 def generate_proposal(job, profile_details, related_past_projects):
     prompt = f"""
@@ -106,7 +120,15 @@ def generate_proposal(job, profile_details, related_past_projects):
         - Give reference of related past projects if necessary 
     """
     print("Making request to Ollama... for job proposal", job['jobTitle'])
-    response = ollama_client.generate(model=app.config['PROPOSAL_MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
-    tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
-    print(f"Response from Ollama generated {response['eval_count']} tokens using {tokens_per_s} tokens per second")
-    return response['response']
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "prompt": prompt
+    }
+    response = lmstudio_model.respond(prompt, response_format=Proposal.model_json_schema())
+    # response = ollama_client.generate(model=app.config['PROPOSAL_MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
+    # tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
+    # print(f"Response from Ollama generated {response['eval_count']} tokens using {tokens_per_s} tokens per second")
+    print(f"generate_proposal: Response from LMStudio generated", response.stats)
+    return response.parsed

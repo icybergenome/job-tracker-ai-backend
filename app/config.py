@@ -11,10 +11,13 @@ class Config:
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 
-    # Ollama settings
-    OLLAMA_URL = os.getenv("OLLAMA_URL")
+    # AI settings
+    # OLLAMA_URL = os.getenv("OLLAMA_URL")
+    AI_URL = os.getenv("AI_URL")
     EVALUATION_MODEL_NAME = os.getenv("EVALUATION_MODEL_NAME")
     PROPOSAL_MODEL_NAME = os.getenv("PROPOSAL_MODEL_NAME")
+    print(AI_URL)
+    print(EVALUATION_MODEL_NAME)
 
     # Google Sheets settings
     SHEET_ID = os.getenv("SHEET_ID")
