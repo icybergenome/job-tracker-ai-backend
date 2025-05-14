@@ -4,6 +4,7 @@ import lmstudio as lms
 import json
 from app import app
 from pydantic import BaseModel
+import PyPDF2
 
 class BasicJobEvaluation(BaseModel):
     relevancy: str
@@ -122,9 +123,10 @@ def generate_proposal(job, profile_details, related_past_projects):
     print("Making request to LMStudio... for job proposal", job['jobTitle'])
     chat = lms.Chat("You are an expert Business Developer who writes job proposals for freelancers. You are good at writing proposals")
     intro_file = "ebook_compressed.pdf"
-    with open(intro_file, "r") as f:
-        intro = f.read()
-    chat.add_user_message(intro)
+    with open(intro_file, "rb") as f:
+        pdf_reader = PyPDF2.PdfReader(f)
+        intro_text = "\n".join([page.extract_text() for page in pdf_reader.pages])
+    chat.add_user_message(intro_text)
     chat.add_user_message(prompt)
     response = lmstudio_model.respond(prompt, response_format=Proposal.model_json_schema())
     # response = ollama_client.generate(model=app.config['PROPOSAL_MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
