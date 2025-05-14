@@ -8,3 +8,5 @@ credentials_oauth.json
 .env
 
 *.rdb
+
+*.pdf

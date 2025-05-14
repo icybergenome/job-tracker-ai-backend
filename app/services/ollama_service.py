@@ -110,22 +110,22 @@ def generate_proposal(job, profile_details, related_past_projects):
     
     Help me write a Job proposal based on my skills which are as follow:
         Profiles of person to apply: {json.dumps(profile_details, indent=2)}
-        My Related Past Projects: {json.dumps(related_past_projects, indent=2)}
+        Uploaded File contains details about me and my past projects.
 
     Proposal should be covering following details:
         - Proposal should be professional with perfect structure
         - In a proposal talk about project details
         - Ask relevant questions where needed
         - Propose technologies relevant to the job and my skills
-        - Give reference of related past projects if necessary 
+        - Give reference of related past projects if necessary
     """
-    print("Making request to Ollama... for job proposal", job['jobTitle'])
-    headers = {
-        "Content-Type": "application/json"
-    }
-    data = {
-        "prompt": prompt
-    }
+    print("Making request to LMStudio... for job proposal", job['jobTitle'])
+    chat = lms.Chat("You are an expert Business Developer who writes job proposals for freelancers. You are good at writing proposals")
+    intro_file = "ebook_compressed.pdf"
+    with open(intro_file, "r") as f:
+        intro = f.read()
+    chat.add_user_message(intro)
+    chat.add_user_message(prompt)
     response = lmstudio_model.respond(prompt, response_format=Proposal.model_json_schema())
     # response = ollama_client.generate(model=app.config['PROPOSAL_MODEL_NAME'], prompt=prompt, format=Proposal.model_json_schema())
     # tokens_per_s = response['eval_count']/response['eval_duration'] * 10**9
