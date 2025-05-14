@@ -110,8 +110,8 @@ def generate_proposal(job, profile_details, related_past_projects):
         ```
     
     Help me write a Job proposal based on my skills which are as follow:
-        Profiles of person to apply: {json.dumps(profile_details, indent=2)}
-        Uploaded File contains details about me and my past projects.
+        Summary of Profiles of persons to apply: {json.dumps(profile_details, indent=2)}
+        Profile Details contain past projects and skill details.
 
     Proposal should be covering following details:
         - Proposal should be professional with perfect structure
@@ -125,7 +125,7 @@ def generate_proposal(job, profile_details, related_past_projects):
     intro_file = "ebook_compressed.pdf"
     with open(intro_file, "rb") as f:
         pdf_reader = PyPDF2.PdfReader(f)
-        intro_text = "\n".join([page.extract_text() for page in pdf_reader.pages])
+        intro_text = "Profile Details:\n".join([page.extract_text() for page in pdf_reader.pages])
     chat.add_user_message(intro_text)
     chat.add_user_message(prompt)
     response = lmstudio_model.respond(prompt, response_format=Proposal.model_json_schema())
